@@ -54,6 +54,8 @@ MyDlg::MyDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MAGA_PICTURENOISEREMOVAL_DIALOG, pParent)
 	, NoiseLevel(0.002)
 	, RestoreEnergyLevel(0.9)
+	, mistake("0")
+	, differance("0")
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -69,6 +71,8 @@ void MyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RESTORED_PICTURE, RestoredPicture);
 	DDX_Control(pDX, IDC_RESFREQUENCY_PICTURE, RestoredFreq);
 	DDX_Control(pDX, IDC_PURE_PICTURE, PurePicture);
+	DDX_Text(pDX, IDC_EDIT3, mistake);
+	DDX_Text(pDX, IDC_EDIT4, differance);
 }
 
 BEGIN_MESSAGE_MAP(MyDlg, CDialogEx)
@@ -182,7 +186,6 @@ void MyDlg::OnBnClickedOk()
 	// TODO: добавьте свой код обработчика уведомлений
 	if (!init)return;
 	UpdateData();
-
 	MainJob mj;
 	mj.SetPath(targetpath, IsPicture);
 	mj.SetNoiseLevel(NoiseLevel);
@@ -198,6 +201,9 @@ void MyDlg::OnBnClickedOk()
 	RestoredFreq.Invalidate();
 	PurePicture.SetData(mj.GetPureData());
 	PurePicture.Invalidate();
+	mistake.Format(L"%.7f", mj.GetMistake());
+	differance.Format(L"%.7f", mj.GetDifferance());
+	UpdateData(FALSE);
 	/*GaussPreloader gauss;
 	gauss.SetPath(targetpath);
 	gauss.Load();

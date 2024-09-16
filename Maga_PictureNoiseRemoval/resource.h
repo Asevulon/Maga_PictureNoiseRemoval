@@ -22,6 +22,8 @@
 #define IDC_RESFREQUENCY_PICTURE        1011
 #define IDC_RESFREQUENCY_PICTURE2       1012
 #define IDC_PURE_PICTURE                1012
+#define IDC_EDIT3                       1013
+#define IDC_EDIT4                       1014
 
 // Next default values for new objects
 // 

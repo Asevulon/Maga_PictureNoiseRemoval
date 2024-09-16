@@ -56,6 +56,15 @@ void SourceDialog::GetPicturesPresets()
 		bWorking = finder.FindNextFileW();
 		PicsList.AddString(finder.GetFileName());
 	}
+
+	CFileFind finder1;
+	auto temp1 = PresetsPath + _T("pic\\*.png");
+	bWorking = finder1.FindFile(temp1);
+	while (bWorking)
+	{
+		bWorking = finder1.FindNextFileW();
+		PicsList.AddString(finder1.GetFileName());
+	}
 }
 
 void SourceDialog::GetTextPresets()

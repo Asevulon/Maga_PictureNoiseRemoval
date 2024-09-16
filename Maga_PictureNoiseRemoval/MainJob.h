@@ -12,6 +12,7 @@ private:
 
 	std::vector<std::vector<double>> data;
 	std::vector<std::vector<double>> Puredata;
+	std::vector<std::vector<double>> StretchedData;
 	std::vector<std::vector<double>> Freq;
 	std::vector<std::vector<double>> NoisedFreq;
 	std::vector<std::vector<double>> RestoredData;
@@ -21,6 +22,8 @@ private:
 	double NoiseLevel = 0;
 	double RestoreEnegryLevel = 0;
 	cmplx zeroFreq;
+	double EstimateSourceNoise = 0;
+	double EstimateSourcePurified = 0;
 protected:
 	void LoadPicture();
 	void LoadGauss();
@@ -28,6 +31,7 @@ protected:
 	double CalcEnergy();
 	std::vector<std::vector<double>>CreateNoiseBase();
 	double CalcNoiseEnergy(std::vector<std::vector<double>>& source);
+	double CalcEnergy(std::vector<std::vector<double>>& source);
 	void NoiseData();
 	template<typename T> void SwapQuadrants(std::vector<std::vector<T>>& source);
 	void CalcNoisedFreq();
@@ -36,6 +40,7 @@ protected:
 	std::vector<std::vector<double>>GetReal(std::vector<std::vector<cmplx>>& source);
 	std::vector<std::vector<double>>GetAbs(std::vector<std::vector<cmplx>>& source);
 	void RestoreRange();
+	void Estimate();
 public:
 	void SetPath(CString& path, bool ispicture);
 	void main();
@@ -47,5 +52,7 @@ public:
 	std::vector<std::vector<double>> GetNoisedFreq(bool zero = true);
 	void SetNoiseLevel(double NL);
 	void SetRestoreEnergyLevel(double val);
+	double GetMistake();
+	double GetDifferance();
 };
 

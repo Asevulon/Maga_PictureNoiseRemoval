@@ -14,6 +14,7 @@ Drawer::Drawer()
 	GdiplusStartupInput si;
 	GdiplusStartup(&token, &si, NULL);
 
+	//ifstream ifstr("wb.txt");
 	ifstream ifstr("DivergentColorMap.txt");
 	for (int i = 0; i < 11; i++)
 	{
@@ -168,14 +169,33 @@ inline Color Drawer::GetQuadreColor(int i, int j)
 inline void Drawer::MakeColorData()
 {
 	Colordata.resize(data.size());
-	for (int i = 0; i < Colordata.size(); i++)
+	if (ToBlack)
 	{
-		Colordata[i].resize(data[i].size());
-		for (int j = 0; j < Colordata[i].size(); j++)
+		double range = zmax - zmin;
+		for (int i = 0; i < Colordata.size(); i++)
 		{
-			Colordata[i][j] = GetColor(data[i][j]);
+			Colordata[i].resize(data[i].size());
+			for (int j = 0; j < Colordata[i].size(); j++)
+			{
+				double z = data[i][j] - zmin;
+				z /= range;
+				z *= 255;
+				Colordata[i][j] = m_Color(z, z, z);
+			}
 		}
 	}
+	else
+	{
+		for (int i = 0; i < Colordata.size(); i++)
+		{
+			Colordata[i].resize(data[i].size());
+			for (int j = 0; j < Colordata[i].size(); j++)
+			{
+				Colordata[i][j] = GetColor(data[i][j]);
+			}
+		}
+	}
+	
 }
 
 void Drawer::OnPicture(LPDRAWITEMSTRUCT lpDrawItemStruct)
@@ -333,6 +353,7 @@ void Drawer::OnGraph(LPDRAWITEMSTRUCT lpDrawItemStruct)
 			map.SetPixel(j, i, Colordata[i][j].AsColor());
 		}
 	}
+	
 	gr.SetTransform(&matr);
 	RectF rect(0, 0, right - left, top - bot);
 	gr.SetClip(rect);

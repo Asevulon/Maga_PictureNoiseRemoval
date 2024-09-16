@@ -17,6 +17,7 @@ struct  m_Color
 	m_Color& operator+ (const m_Color& right) { r += right.r; g += right.g; b += right.b; r /= 2; g /= 2; b /= 2; return *this; }
 	void ToOpenGlRange() { r /= 255; g /= 255; b /= 255; }
 	inline m_Color Avg(m_Color& c1, m_Color& c2, m_Color& c3) { r += c1.r + c2.r + c3.r; r /= 4; g += c1.g + c2.g + c3.g; g /= 4; b += c1.b + c2.b + c3.b; b /= 4; return *this; }
+	m_Color ToBlack() { double c = 0.299 * r + 0.587 * g + 0.114 * b; return m_Color(c, c, c); }
 };
 
 
@@ -48,6 +49,7 @@ private:
 	vector<vector<m_Color>>Colordata;
 
 	bool m_ShowPicture = false;
+	bool ToBlack = true;
 	CString m_PicturePath;
 public:
 	Drawer();

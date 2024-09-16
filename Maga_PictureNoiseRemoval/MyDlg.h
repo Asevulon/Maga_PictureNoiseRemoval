@@ -46,4 +46,6 @@ public:
 	bool init = false;
 	Drawer RestoredFreq;
 	Drawer PurePicture;
+	CString mistake;
+	CString differance;
 };

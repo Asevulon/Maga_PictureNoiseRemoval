@@ -167,6 +167,18 @@ double MainJob::CalcEnergy(std::vector<std::vector<cmplx>>& source)
 	}
 	return res;
 }
+double MainJob::CalcEnergy(std::vector<std::vector<double>>& source)
+{
+	double res = 0;
+	for (int i = 0; i < source.size(); i++)
+	{
+		for (int j = 0; j < source[i].size(); j++)
+		{
+			res += pow2(source[i][j]);
+		}
+	}
+	return res;
+}
 
 std::vector<std::vector<double>> MainJob::GetReal(std::vector<std::vector<cmplx>>& source)
 {
@@ -204,6 +216,28 @@ void MainJob::RestoreRange()
 	rstr.SetTargetSize(OriginalSourceSize);
 	rstr.ConvertRange(RestoredData);
 	RestoredData = rstr.GetStretched();
+}
+
+void MainJob::Estimate()
+{
+	double Epure = CalcEnergy(StretchedData);
+	
+	double Emist = 0;
+	double Enoise = 0;
+	for (int i = 0; i < StretchedData.size(); i++)
+	{
+		for (int j = 0; j < StretchedData[i].size(); j++)
+		{
+			Emist = pow2(StretchedData[i][j] - RestoredData[i][j]);
+			Enoise = pow2(StretchedData[i][j] - data[i][j]);
+		}
+	}
+
+	Emist /= Epure;
+	Enoise /= Epure;
+
+	EstimateSourceNoise = sqrt(Enoise);
+	EstimateSourcePurified = sqrt(Emist);
 }
 
 template<typename T>
@@ -249,9 +283,11 @@ void MainJob::main()
 	}
 	Puredata = data;
 	StretchImage();
+	StretchedData = data;
 	NoiseData();
 	CalcNoisedFreq();
 	RemoveNoise();
+	Estimate();
 	RestoreRange();
 }
 
@@ -302,4 +338,14 @@ void MainJob::SetNoiseLevel(double NL)
 void MainJob::SetRestoreEnergyLevel(double val)
 {
 	RestoreEnegryLevel = val;
+}
+
+double MainJob::GetMistake()
+{
+	return EstimateSourcePurified;
+}
+
+double MainJob::GetDifferance()
+{
+	return EstimateSourceNoise;
 }
