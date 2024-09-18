@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "Drawer.h"
 #include<fstream>
-
+#include<math.h>
 // Drawer
 
 IMPLEMENT_DYNAMIC(Drawer, CStatic)
@@ -23,6 +23,7 @@ Drawer::Drawer()
 		Colors.push_back(m_Color(r, g, b));
 	}
 	ifstr.close();
+	logconstant = 1 / log(10);
 }
 
 Drawer::~Drawer()
@@ -57,6 +58,7 @@ void Drawer::SetData(std::vector<std::vector<double>>& in)
 {
 	if (in.empty())return;
 	data = in;
+	if (logarithmic)DataToLog();
 	vector<double>Max;
 	Max.resize(data.size());
 	vector<double>Min = Max;
@@ -123,6 +125,11 @@ void Drawer::SetPicturePath(CString path)
 void Drawer::ShowPicture(bool flag)
 {
 	m_ShowPicture = flag;
+}
+
+void Drawer::SetLogarithmic(bool flag)
+{
+	logarithmic = flag;
 }
 
 double Drawer::CalcStringLen(HDC hDC, CString str)
@@ -385,4 +392,25 @@ void Drawer::OnGraph(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 
 	ToWindow.DrawImage(&bmp, 0, 0);
+}
+
+inline double Drawer::logTransform(double val)
+{
+	return sgn(val) * log10(1 + abs(val / logconstant));
+}
+
+void Drawer::DataToLog()
+{
+	for (int i = 0; i < data.size(); i++)
+	{
+		for (int j = 0; j < data[i].size(); j++)
+		{
+			data[i][j] = logTransform(data[i][j]);
+		}
+	}
+}
+
+
+template <typename T> int sgn(T val) {
+	return (T(0) < val) - (val < T(0));
 }

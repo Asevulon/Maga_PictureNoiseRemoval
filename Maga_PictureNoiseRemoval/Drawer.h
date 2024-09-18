@@ -51,6 +51,8 @@ private:
 	bool m_ShowPicture = false;
 	bool ToBlack = true;
 	CString m_PicturePath;
+	bool logarithmic = false;
+	double logconstant = 0;
 public:
 	Drawer();
 	virtual ~Drawer();
@@ -65,6 +67,8 @@ protected:
 
 	void OnPicture(LPDRAWITEMSTRUCT lpDrawItemStruct);
 	void OnGraph(LPDRAWITEMSTRUCT lpDrawItemStruct);
+	inline double logTransform(double val);
+	void DataToLog();
 	DECLARE_MESSAGE_MAP()
 public:
 	virtual void DrawItem(LPDRAWITEMSTRUCT /*lpDrawItemStruct*/);
@@ -76,6 +80,8 @@ public:
 	void SetTitle(CString str);
 	void SetPicturePath(CString path);
 	void ShowPicture(bool flag);
+	void SetLogarithmic(bool flag);
 };
 
 
+template <typename T> inline int sgn(T val);

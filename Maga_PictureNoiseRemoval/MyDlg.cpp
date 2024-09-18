@@ -73,6 +73,8 @@ void MyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PURE_PICTURE, PurePicture);
 	DDX_Text(pDX, IDC_EDIT3, mistake);
 	DDX_Text(pDX, IDC_EDIT4, differance);
+	DDX_Control(pDX, IDC_RADIO1, radioLinear);
+	DDX_Control(pDX, IDC_RADIO2, radioLog);
 }
 
 BEGIN_MESSAGE_MAP(MyDlg, CDialogEx)
@@ -127,6 +129,7 @@ BOOL MyDlg::OnInitDialog()
 	RestoredFreq.SetTitle(L"Восстановленный спектр");
 	PurePicture.ShowPicture(false);
 	PurePicture.SetTitle(L"Картинка (Интенсивность)");
+	radioLog.SetCheck(BST_CHECKED);
 	return TRUE;  // возврат значения TRUE, если фокус не передан элементу управления
 }
 
@@ -191,6 +194,16 @@ void MyDlg::OnBnClickedOk()
 	mj.SetNoiseLevel(NoiseLevel);
 	mj.SetRestoreEnergyLevel(RestoreEnergyLevel);
 	mj.main();
+	if (radioLog.GetCheck() == BST_CHECKED)
+	{
+		FrequencyPicture.SetLogarithmic(true);
+		RestoredFreq.SetLogarithmic(true);
+	}
+	else
+	{
+		FrequencyPicture.SetLogarithmic(false);
+		RestoredFreq.SetLogarithmic(false);
+	}
 	NoisedPicture.SetData(mj.GetData());
 	NoisedPicture.Invalidate();
 	FrequencyPicture.SetData(mj.GetNoisedFreq());

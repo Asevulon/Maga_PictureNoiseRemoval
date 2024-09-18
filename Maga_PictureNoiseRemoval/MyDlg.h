@@ -48,4 +48,6 @@ public:
 	Drawer PurePicture;
 	CString mistake;
 	CString differance;
+	CButton radioLinear;
+	CButton radioLog;
 };
